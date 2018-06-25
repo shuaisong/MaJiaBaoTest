@@ -1,0 +1,46 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs{
+        releaseConfig{
+            keyAlias 'key_majiabao'
+            keyPassword 'majiabao'
+            storePassword 'majiabao'
+            storeFile file('./../app_key.jks')
+        }
+    }
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.example.lenovo.majiabaotest"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+       // mManifestPlaceholders = [APP_NAME: '主包名称']
+        manifestPlaceholders = [APP_NAME: '主包名称'] // 配置主包的应用名称
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
+        }
+        // 第一个马甲包
+        majiabaoOne.initWith(buildTypes.release) // 以release的配置来初始化马甲包配置
+        majiabaoOne {
+            applicationIdSuffix ".majiabaoOne"
+            // 修改马甲包的applicationId，马甲包的application将为com.liunian.majiabaotest.majiabaoOne，即在原来的applicationId后加上配置内容
+            manifestPlaceholders = [APP_NAME: '第一个马甲包'] // 配置马甲包的应用名称
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
